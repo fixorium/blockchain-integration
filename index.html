@@ -1,145 +1,49 @@
- 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Token Swap and Fixercoin/Sol Contract Interaction</title>
-  <style>
-    /* Global Styles */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-    }
-
-    /* Token Swap Styles */
-    #token-swap {
-      width: 50%;
-      margin: 40px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      background-color: #fff;
-    }
-
-    #token-swap h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    #token-swap label {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    #token-swap input[type="text"], #token-swap input[type="number"] {
-      width: 100%;
-      height: 40px;
-      margin-bottom: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    #token-swap button {
-      width: 100%;
-      height: 40px;
-      background-color: #4CAF50;
-      color: #fff;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #token-swap button:hover {
-      background-color: #3e8e41;
-    }
-
-    /* Fixercoin/Sol Contract Interaction Styles */
-    #fixercoin-sol {
-      width: 50%;
-      margin: 40px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      background-color: #fff;
-    }
-
-    #fixercoin-sol h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    #fixercoin-sol button {
-      width: 100%;
-      height: 40px;
-      background-color: #4CAF50;
-      color: #fff;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-bottom: 20px;
-    }
-
-    #fixercoin-sol button:hover {
-      background-color: #3e8e41;
-    }
-
-    #balance {
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swap SOL Coin with Phantom Wallet</title>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.30.0/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-react@0.14.0/dist/index.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-wallets@0.14.0/dist/index.umd.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <div id="token-swap">
-    <h2>Token Swap</h2>
-    <form id="swap-form">
-      <label for="token-in">Token In:</label>
-      <input type="text" id="token-in" name="token-in"><br><br>
-      <label for="token-out">Token Out:</label>
-      <input type="text" id="token-out" name="token-out"><br><br>
-      <label for="amount-in">Amount In:</label>
-      <input type="number" id="amount-in" name="amount-in"><br><br>
-      <button id="swap-button">Swap Tokens</button>
-    </form>
-  </div>
-  <div id="fixercoin-sol">
-    <h1>Fixercoin/Sol Contract Interaction</h1>
-    <button id="connect-button">Connect to Phantom Wallet</button>
-    <button id="get-balance-button">Get Balance</button>
-    <button id="transfer-button">Transfer Fixercoin</button>
-    <div id="balance"></div>
-  </div>
+    <h1>Swap SOL Coin</h1>
+    <button id="connect-wallet">Connect Phantom Wallet</button>
+    <button id="swap-sol" style="display:none;">Swap SOL</button>
+    <div id="status"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/web3@1.7.3/dist/web3.min.js"></script>
+    <script>
+        const { Connection, PublicKey, clusterApiUrl } = window.solanaWeb3;
+        const { PhantomWalletAdapter } = window['@solana/wallet-adapter-wallets'];
+        const { WalletProvider } = window['@solana/wallet-adapter-react'];
 
-  <script>
-    // Solana provider setup
-    const getSolanaProvider = () => {
-      if (window.solana) {
-        return window.solana;
-      } else {
-        console.error('No Solana provider found');
-        return null;
-      }
-    };
+        const connection = new Connection(clusterApiUrl('mainnet-beta'), 'confirmed');
+        const wallet = new PhantomWalletAdapter();
 
-    const connectToPhantom = async () => {
-      try {
-        const provider = getSolanaProvider();
-        await provider.connect();
-        return provider.publicKey.toString();
-      } catch (error) {
-        console.error('Connection failed:', error);
-      }
-    };
-  </script>
+        document.getElementById('connect-wallet').onclick = async () => {
+            await wallet.connect();
+            document.getElementById('status').innerText = 'Wallet Connected: ' + wallet.publicKey.toString();
+            document.getElementById('swap-sol').style.display = 'block';
+        };
+
+        document.getElementById('swap-sol').onclick = async () => {
+            // Add your swap logic here
+            document.getElementById('status').innerText = 'Swapping SOL...';
+        };
+    </script>
 </body>
 </html>
