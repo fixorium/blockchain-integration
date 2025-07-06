@@ -1,14 +1,18 @@
- <!DOCTYPE html>
+ 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Token Swap</title>
+  <title>Token Swap and Fixercoin/Sol Contract Interaction</title>
   <style>
-    /* Add CSS styles here */
+    /* Global Styles */
     body {
       font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
     }
+
+    /* Token Swap Styles */
     #token-swap {
       width: 50%;
       margin: 40px auto;
@@ -16,6 +20,80 @@
       border: 1px solid #ccc;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+
+    #token-swap h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #token-swap label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    #token-swap input[type="text"], #token-swap input[type="number"] {
+      width: 100%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #token-swap button {
+      width: 100%;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #token-swap button:hover {
+      background-color: #3e8e41;
+    }
+
+    /* Fixercoin/Sol Contract Interaction Styles */
+    #fixercoin-sol {
+      width: 50%;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+
+    #fixercoin-sol h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #fixercoin-sol button {
+      width: 100%;
+      height: 40px;
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    #fixercoin-sol button:hover {
+      background-color: #3e8e41;
+    }
+
+    #balance {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -32,8 +110,16 @@
       <button id="swap-button">Swap Tokens</button>
     </form>
   </div>
-  <script src="https:                                                                              
+  <div id="fixercoin-sol">
+    <h1>Fixercoin/Sol Contract Interaction</h1>
+    <button id="connect-button">Connect to Phantom Wallet</button>
+    <button id="get-balance-button">Get Balance</button>
+    <button id="transfer-button">Transfer Fixercoin</button>
+    <div id="balance"></div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/web3@1.7.3/dist/web3.min.js"></script>
+
   <script>
     // Solana provider setup
     const getSolanaProvider = () => {
@@ -51,81 +137,9 @@
         await provider.connect();
         return provider.publicKey.toString();
       } catch (error) {
-        console.error('Error connecting to Phantom:', error);
-        return null;
+        console.error('Connection failed:', error);
       }
     };
-
-    // Web3 provider setup
-    const getWeb3 = () => {
-      if (window.ethereum) {
-        const web3 = new Web3(window.ethereum);
-        return web3;
-      } else {
-        console.error('No Web3 provider found');
-        return null;
-      }
-    };
-
-    const connectToMetaMask = async () => {
-      try {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        return true;
-      } catch (error) {
-        console.error('Error connecting to MetaMask:', error);
-        return false;
-      }
-    };
-
-    // Smart contract interaction
-    const contractAddress = '0x...';
-    const contractAbi = [...];
-
-    const swapTokens = async () => {
-      if (window.solana) {
-        console.log('Using Solana provider');
-        const provider = getSolanaProvider();
-        // Implement Solana smart contract interaction
-      } else if (window.ethereum) {
-        console.log('Using Web3 provider');
-        const web3 = getWeb3();
-        if (web3) {
-          try {
-            const contract = new web3.eth.Contract(contractAbi, contractAddress);
-            const tokenIn = document.getElementById('token-in').value;
-            const tokenOut = document.getElementById('token-out').value;
-            const amountIn = document.getElementById('amount-in').value;
-
-            // Call smart contract function
-            await contract.methods.swapTokens(tokenIn, tokenOut, amountIn).send({ from: (await web3.eth.getAccounts())[0] });
-            console.log(`Swapped ${amountIn} ${tokenIn} for ${tokenOut}`);
-          } catch (error) {
-            console.error('Error swapping tokens:', error);
-            // Handle error based on type
-            if (error.code === 'INVALID_ARGUMENT') {
-              console.log('Invalid argument');
-            } else if (error.code === 'REVERT') {
-              console.log('Transaction reverted');
-            }
-          }
-        } else {
-          console.error('No Web3 provider found');
-        }
-      } else {
-        console.error('No provider found');
-      }
-    };
-
-    // Event listener for swap button
-    document.getElementById('swap-button').addEventListener('click', async (e) => {
-      e.preventDefault();
-      if (window.solana) {
-        await connectToPhantom();
-      } 
-      else if (window.ethereum) {
-        await connectToMetaMask();
-      }
-      await swapTokens();
-    });
   </script>
 </body>
+</html>
