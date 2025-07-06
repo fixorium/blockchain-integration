@@ -1,55 +1,64 @@
  <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swap Tokens</title>
-    <script type="module">
-        import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
-        import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
-        import { WalletProvider } from '@solana/wallet-adapter-react';
-        import { useWallet } from '@solana/wallet-adapter-react';
-        import React, { useEffect, useState } from 'react';
-        import ReactDOM from 'react-dom';
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swap Tokens</title>
+  <script src="https:                                                                        
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js" crossorigin></script>
+  <script src="https:                                                                   
+  <script src="https://unpkg.com/@solana/wallet-adapter-phantom@latest/lib/index.iife.min.js"></script>
+  <script src="https:                                                                                
+  <script>
+    const { Connection, PublicKey, clusterApiUrl } = solanaWeb3;
+    const { PhantomWalletAdapter } = solanaWalletAdapterPhantom;
+    const { WalletProvider, useWallet } = solanaWalletAdapterReact;
+    const FIXERCOIN_ADDRESS = new PublicKey('H4qKn8FMFha8jJuj8xMryMqRhH3h7GjLuxw7TVixpump');
 
-        const FIXERCOIN_ADDRESS = new PublicKey('H4qKn8FMFha8jJuj8xMryMqRhH3h7GjLuxw7TVixpump');
+    const App = () => {
+      const { connected, wallet, connect, disconnect } = useWallet();
+      const [connection, setConnection] = React.useState(null);
 
-        const App = () => {
-            const { connected, wallet, connect, disconnect } = useWallet();
-            const [connection, setConnection] = useState(null);
+      React.useEffect(() => {
+        const conn = new Connection(clusterApiUrl('mainnet-beta'));
+        setConnection(conn);
+      }, []);
 
-            useEffect(() => {
-                const conn = new Connection(clusterApiUrl('mainnet-beta'));
-                setConnection(conn);
-            }, []);
+      const handleSwap = async () => {
+        try {
+          if (!connected) {
+            await connect();
+          }
+                                                        
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-            const handleSwap = async () => {
-                if (!connected) {
-                    await connect();
-                }
-                // Add swap logic here using FIXERCOIN_ADDRESS
-            };
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('h1', null, 'Swap Tokens'),
+        React.createElement(
+          'button',
+          { onClick: handleSwap },
+          connected ? 'Swap Tokens' : 'Connect Phantom Wallet'
+        )
+      );
+    };
 
-            return (
-                <div>
-                    <h1>Swap Tokens</h1>
-                    <button onClick={handleSwap}>
-                        {connected ? 'Swap Tokens' : 'Connect Phantom Wallet'}
-                    </button>
-                </div>
-            );
-        };
+    const Main = () => {
+      return React.createElement(
+        WalletProvider,
+        { wallets: [new PhantomWalletAdapter()], autoConnect: true },
+        React.createElement(App, null)
+      );
+    };
 
-        const Main = () => (
-            <WalletProvider wallets={[new PhantomWalletAdapter()]}>
-                <App />
-            </WalletProvider>
-        );
-
-        ReactDOM.render(<Main />, document.getElementById('root'));
-    </script>
+    ReactDOM.render(React.createElement(Main, null), document.getElementById('root'));
+  </script>
 </head>
 <body>
-    <div id="root"></div>
+  <div id="root"></div>
 </body>
 </html>
