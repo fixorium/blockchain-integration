@@ -1,49 +1,55 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swap SOL Coin with Phantom Wallet</title>
-    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.30.0/dist/web3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-react@0.14.0/dist/index.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@solana/wallet-adapter-wallets@0.14.0/dist/index.umd.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+    <title>Swap Tokens</title>
+    <script type="module">
+        import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+        import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
+        import { WalletProvider } from '@solana/wallet-adapter-react';
+        import { useWallet } from '@solana/wallet-adapter-react';
+        import React, { useEffect, useState } from 'react';
+        import ReactDOM from 'react-dom';
+
+        const FIXERCOIN_ADDRESS = new PublicKey('H4qKn8FMFha8jJuj8xMryMqRhH3h7GjLuxw7TVixpump');
+
+        const App = () => {
+            const { connected, wallet, connect, disconnect } = useWallet();
+            const [connection, setConnection] = useState(null);
+
+            useEffect(() => {
+                const conn = new Connection(clusterApiUrl('mainnet-beta'));
+                setConnection(conn);
+            }, []);
+
+            const handleSwap = async () => {
+                if (!connected) {
+                    await connect();
+                }
+                // Add swap logic here using FIXERCOIN_ADDRESS
+            };
+
+            return (
+                <div>
+                    <h1>Swap Tokens</h1>
+                    <button onClick={handleSwap}>
+                        {connected ? 'Swap Tokens' : 'Connect Phantom Wallet'}
+                    </button>
+                </div>
+            );
+        };
+
+        const Main = () => (
+            <WalletProvider wallets={[new PhantomWalletAdapter()]}>
+                <App />
+            </WalletProvider>
+        );
+
+        ReactDOM.render(<Main />, document.getElementById('root'));
+    </script>
 </head>
 <body>
-    <h1>Swap SOL Coin</h1>
-    <button id="connect-wallet">Connect Phantom Wallet</button>
-    <button id="swap-sol" style="display:none;">Swap SOL</button>
-    <div id="status"></div>
-
-    <script>
-        const { Connection, PublicKey, clusterApiUrl } = window.solanaWeb3;
-        const { PhantomWalletAdapter } = window['@solana/wallet-adapter-wallets'];
-        const { WalletProvider } = window['@solana/wallet-adapter-react'];
-
-        const connection = new Connection(clusterApiUrl('mainnet-beta'), 'confirmed');
-        const wallet = new PhantomWalletAdapter();
-
-        document.getElementById('connect-wallet').onclick = async () => {
-            await wallet.connect();
-            document.getElementById('status').innerText = 'Wallet Connected: ' + wallet.publicKey.toString();
-            document.getElementById('swap-sol').style.display = 'block';
-        };
-
-        document.getElementById('swap-sol').onclick = async () => {
-            // Add your swap logic here
-            document.getElementById('status').innerText = 'Swapping SOL...';
-        };
-    </script>
+    <div id="root"></div>
 </body>
 </html>
