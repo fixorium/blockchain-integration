@@ -202,7 +202,29 @@ contract.methods.addLiquidity(
 });
   
  </script>
+<script>
 
+ async swapTokens(fromToken, toToken, amount) {
+  try {
+    // Create a transaction to swap tokens
+    const transaction = await this.createSwapTransaction(fromToken, toToken, amount);
+    // Sign the transaction
+    const signedTransaction = await this.signTransaction(transaction);
+    // Send the transaction
+    const signature = await this.sendTransaction(signedTransaction, connection);
+    return signature;
+  } catch (error) {
+    console.error('Error swapping tokens with Phantom wallet:', error);
+    throw error;
+  }
+}
+
+async createSwapTransaction(fromToken, toToken, amount) {
+  // Implement the logic to create a swap transaction
+  // This may involve using a decentralized exchange (DEX) or a liquidity pool
+  // For example, you can use the Serum DEX or a liquidity pool like Raydium
+ }
+</script>
  
 </body>
 </html>
